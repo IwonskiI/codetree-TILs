@@ -33,6 +33,7 @@ def action(ordr):
 def chk_sushi(m):
     p_key = list(p_lst.keys())
     for idx in p_key:
+        flag = 0
         for move in range(m+1):
             if ((idx-move) % L) in s_lst and p_lst[idx][0] in s_lst[(idx-move) % L]:
                 need_cnt = p_lst[idx][1]
@@ -50,9 +51,10 @@ def chk_sushi(m):
                         break
                 if need_cnt == 0:
                     p_lst.pop(idx)
+                    flag = 1
                 else:
                     p_lst[idx] = [p_lst[idx][0], need_cnt]
-            if len(p_lst) == 0 or len(s_lst) == 0:
+            if len(p_lst) == 0 or len(s_lst) == 0 or flag:
                 break
 
 
