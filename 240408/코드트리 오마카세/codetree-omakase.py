@@ -49,16 +49,28 @@ def chk_sushi():
                 break
 
 
+# 시간 스킵 하는 부분 초밥 먹는거 체크
 cur_t = 1
 for o in order:
     spent_t = int(o[1]) - cur_t
+    st_tmp = L if spent_t >= L else spent_t
+    for st in range(st_tmp):
+        new_dict = dict()
+        for i in s_lst:
+            key = i
+            val = s_lst.get(i)
+            new_dict[(key + 1) % L] = val
+        s_lst = new_dict
+        if len(p_lst) != 0:
+            chk_sushi()
     cur_t = int(o[1])
+    st_tmp = spent_t if st_tmp == L else 0
     if spent_t != 0:
         new_dict = dict()
         for i in s_lst:
             key = i
             val = s_lst.get(i)
-            new_dict[(key + spent_t) % L] = val
+            new_dict[(key + st_tmp) % L] = val
         s_lst = new_dict
 
     if o[0] != "300":
