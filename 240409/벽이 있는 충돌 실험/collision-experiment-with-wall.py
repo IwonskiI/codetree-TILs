@@ -1,6 +1,6 @@
 def init(lst):
     if lst[0] != 2:
-        return int(lst[1])
+        return int(lst[1])-1
     else:
         if lst[1] == 'L':
             return 0
@@ -17,8 +17,6 @@ def move(info, b, n):
     # d = [L U R D]
     dc = [0, -1, 0, 1]
     dr = [-1, 0, 1, 0]
-    c -= 1
-    r -= 1
     nc, nr = c + dc[d], r + dr[d]
     if nc >= n or nr >= n or nc < 0 or nr < 0:
         info[2] = (d + 2) % 4
@@ -48,7 +46,7 @@ for t in range(T):
     board = [[0 for _ in range(N)] for _ in range(N)]
 
     for ball in b_info:
-        board[ball[0] - 1][ball[1] - 1] = 1
+        board[ball[0]][ball[1]] = 1
 
     for _ in range(2 * N - 1):
         for ball in b_info:
