@@ -5,12 +5,14 @@ import heapq
 # hist_dict = history dictionary
 
 Q = int(input())
+tasks = [list(input().split()) for _ in range(Q)]
 w_heap = []
 w_dict = dict()
 jid_dict = dict()
 hist_dict = dict()
 jdom_dict = dict()
 j_cnt = []
+
 
 def chk_domain(cur_dom, j_dom):
     domain = cur_dom.split("/")[0]
@@ -29,9 +31,7 @@ def chk_time(d_arg, t_arg, hist_d):
     return True
 
 
-for _ in range(Q):
-    task = input().split()
-
+for task in tasks:
     if task[0] == "100":
         j_cnt = [i for i in range(1, int(task[1])+1)]
         heapq.heapify(j_cnt)
@@ -67,11 +67,14 @@ for _ in range(Q):
     elif task[0] == "400":
         end_t = int(task[1])
         end_id = int(task[2])
-        heapq.heappush(j_cnt, end_id)
-        st, dom = jid_dict.get(end_id)
-        jid_dict.pop(end_id)
-        jdom_dict.pop(dom)
-        hist_dict[dom] = (st, end_t, end_id)
+        if end_id in jid_dict:
+            heapq.heappush(j_cnt, end_id)
+            start_t, dom = jid_dict.get(end_id)
+            jid_dict.pop(end_id)
+            jdom_dict.pop(dom)
+            hist_dict[dom] = (start_t, end_t, end_id)
+        else:
+            continue
 
     elif task[0] == "500":
         print(len(w_heap))
