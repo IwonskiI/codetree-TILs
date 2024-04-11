@@ -23,7 +23,7 @@ from collections import defaultdict
 
 Q = int(input())
 tasks = [list(input().split()) for _ in range(Q)]
-w_heap = [[] for _ in range(300)]
+w_heap = [[] for _ in range(301)]
 w_dict = defaultdict(list)
 d_num_dict = dict()
 jid_dict = dict()
