@@ -1,5 +1,6 @@
 from collections import defaultdict
 import math
+import sys
 
 
 class Node:
@@ -9,6 +10,7 @@ class Node:
         self.next = None
 
 
+sys.stdin = open("input.txt", "r")
 Q = int(input())
 belt_dict = defaultdict(list)
 box_dict = dict()
@@ -31,10 +33,12 @@ for _ in range(Q):
 
     elif fun == 200:
         src, dst = task[1], task[2]
-        belt_dict[dst][0].prev = belt_dict[src][-1]
-        belt_dict[src][-1].next = belt_dict[dst][0]
-        belt_dict[dst] = belt_dict[src] + belt_dict[dst]
-        belt_dict[src] = []
+        if len(belt_dict[src]):
+            if len(belt_dict[dst]):
+                belt_dict[dst][0].prev = belt_dict[src][-1]
+                belt_dict[src][-1].next = belt_dict[dst][0]
+            belt_dict[dst] = belt_dict[src] + belt_dict[dst]
+            belt_dict[src] = []
         print(len(belt_dict[dst]))
 
     elif fun == 300:
@@ -43,20 +47,28 @@ for _ in range(Q):
             src_box = belt_dict[src][0]
             dst_box = belt_dict[dst][0]
             belt_dict[src][0], belt_dict[dst][0] = dst_box, src_box
-            dst_box.next = belt_dict[src][1]
-            belt_dict[src][1].prev = dst_box
-            src_box.next = belt_dict[dst][1]
-            belt_dict[dst][1].prev = src_box
+            if len(belt_dict[src]) > 1:
+                dst_box.next = belt_dict[src][1]
+                belt_dict[src][1].prev = dst_box
+            else:
+                dst_box.next = None
+            if len(belt_dict[dst]) > 1:
+                src_box.next = belt_dict[dst][1]
+                belt_dict[dst][1].prev = src_box
+            else:
+                src_box.next = None
         elif len(belt_dict[src]) == 0 and len(belt_dict[dst]):
             dst_box = belt_dict[dst][0]
             belt_dict[src].append(dst_box)
-            dst_box.next.prev = None
+            if len(belt_dict[dst]) > 1:
+                dst_box.next.prev = None
             dst_box.next = None
             belt_dict[dst] = belt_dict[dst][1:]
         elif len(belt_dict[src]) and len(belt_dict[dst]) == 0:
             src_box = belt_dict[src][0]
             belt_dict[dst].append(src_box)
-            src_box.next.prev = None
+            if len(belt_dict[src]) > 1:
+                src_box.next.prev = None
             src_box.next = None
             belt_dict[src] = belt_dict[src][1:]
         print(len(belt_dict[dst]))
