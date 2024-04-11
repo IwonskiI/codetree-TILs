@@ -1,6 +1,6 @@
 from collections import defaultdict
 import math
-import sys
+# import sys
 
 
 class Node:
@@ -10,7 +10,7 @@ class Node:
         self.next = None
 
 
-sys.stdin = open("input.txt", "r")
+# sys.stdin = open("input.txt", "r")
 Q = int(input())
 belt_dict = defaultdict(list)
 box_dict = dict()
