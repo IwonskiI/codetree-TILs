@@ -118,7 +118,9 @@ for _ in range(Q):
                 break
         last_box = belt_lst[move_num][1]
         first_box = belt_lst[b_num][0]
-        id_dict.get(first_box.data[0])[0].data = move_num
+        tmp_tuple1 = id_dict.get(first_box.data[0])
+        tmp_tuple2 = id_dict.get(last_box.data[0])
+        id_dict[first_box.data[0]] = (tmp_tuple2[0], tmp_tuple1[1])
         first_box.prev = last_box
         last_box.next = first_box
         print(task[1])
