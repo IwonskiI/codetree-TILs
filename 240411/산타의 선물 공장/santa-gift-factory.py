@@ -8,7 +8,7 @@ class Node:
         self.prev = None
 
 
-# sys.stdin = open("input2.txt", "r")
+# sys.stdin = open("input.txt", "r")
 Q = int(input())
 belt_lst = []
 id_dict = dict()
@@ -54,31 +54,42 @@ for _ in range(Q):
             if belt_lst[b_len] == -1:
                 continue
             cur_box, last_box = belt_lst[b_len]
+            if cur_box is None and last_box is None:
+                continue
             if cur_box.data[1] <= w_max:
                 w_tot += cur_box.data[1]
                 next_box = cur_box.next
-                next_box.prev = None
-                belt_lst[b_len] = (next_box, last_box)
+                if next_box:
+                    next_box.prev = None
+                    belt_lst[b_len] = (next_box, last_box)
+                else:
+                    belt_lst[b_len] = (None, None)
                 id_dict.pop(cur_box.data[0])
             else:
                 next_box = cur_box.next
-                next_box.prev = None
-                last_box.next = cur_box
-                cur_box.prev = last_box
-                cur_box.next = None
-                belt_lst[b_len] = (next_box, cur_box)
+                if next_box:
+                    next_box.prev = None
+                    last_box.next = cur_box
+                    cur_box.prev = last_box
+                    cur_box.next = None
+                    belt_lst[b_len] = (next_box, cur_box)
         print(w_tot)
 
     elif task[0] == 300:
         r_id = task[1]
         if r_id in id_dict:
-            empty, r_box = id_dict.get(r_id)
+            belt_num, r_box = id_dict.get(r_id)
             p_r_box = r_box.prev
             n_r_box = r_box.next
             if p_r_box:
                 p_r_box.next = n_r_box
             if n_r_box:
                 n_r_box.prev = p_r_box
+            start, end = belt_lst[belt_num]
+            if not p_r_box:
+                belt_lst[belt_num] = (n_r_box, end)
+            if not n_r_box:
+                belt_lst[belt_num] = (start, p_r_box)
             id_dict.pop(r_id)
             print(r_id)
         else:
@@ -90,7 +101,7 @@ for _ in range(Q):
             belt_num, f_box = id_dict.get(f_id)
             # belt_num = belt_num.data.data
             front_box, last_box = belt_lst[belt_num]
-            if front_box == f_box:
+            if front_box == f_box or front_box == last_box:
                 pass
             elif last_box == f_box:
                 prev_box = f_box.prev
@@ -115,26 +126,31 @@ for _ in range(Q):
         if belt_lst[b_num] == -1:
             print(-1)
             continue
-        move_num = -1
-        belt_len = len(belt_lst)
-        for belt in range(1, belt_len):
-            if belt_lst[(belt+b_num) % belt_len] == -1:
-                continue
+        if belt_lst[b_num][0] is None and belt_lst[b_num][1] is None:
+            pass
+        else:
+            move_num = -1
+            belt_len = len(belt_lst)
+            for belt in range(1, belt_len):
+                if belt_lst[(belt+b_num) % belt_len] == -1:
+                    continue
+                else:
+                    move_num = ((belt+b_num) % belt_len)
+                    break
+            first_box = belt_lst[b_num][0]
+            cur = first_box
+            while True:
+                tmp = id_dict.get(cur.data[0])
+                id_dict[cur.data[0]] = (move_num, tmp[1])
+                if not cur.next:
+                    break
+                cur = cur.next
+            if belt_lst[move_num][0] is None and belt_lst[move_num][1] is None:
+                belt_lst[move_num] = (first_box, cur)
             else:
-                move_num = ((belt+b_num) % belt_len)
-                break
-        last_box = belt_lst[move_num][1]
-        first_box = belt_lst[b_num][0]
-        cur = first_box
-        while cur:
-            tmp = id_dict.get(cur.data[0])
-            id_dict[cur.data[0]] = (move_num, tmp[1])
-            cur = cur.next
-
-        # new_belt_node = Node(id_dict.get(last_box.data[0])[0].data.data)
-        # id_dict.get(first_box.data[0])[0].data = new_belt_node
-        # id_dict.get(last_box.data[0])[0].data = new_belt_node
-        first_box.prev = last_box
-        last_box.next = first_box
-        print(task[1])
+                last_box = belt_lst[move_num][1]
+                first_box.prev = last_box
+                last_box.next = first_box
+                belt_lst[move_num] = (belt_lst[move_num][0], cur)
+            print(task[1])
         belt_lst[b_num] = -1
