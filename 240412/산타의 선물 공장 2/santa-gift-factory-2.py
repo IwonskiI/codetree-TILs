@@ -36,6 +36,10 @@ for _ in range(Q):
 
     elif fun == 200:
         src, dst = task[1], task[2]
+        if src not in st_ed_dict:
+            st_ed_dict[src] = [None, None, 0]
+        if dst not in st_ed_dict:
+            st_ed_dict[dst] = [None, None, 0]
         if not (st_ed_dict[src][0] is None and st_ed_dict[src][1] is None):
             src_lst = st_ed_dict[src]
             if not (st_ed_dict[dst][0] is None and st_ed_dict[dst][1] is None):
@@ -95,6 +99,10 @@ for _ in range(Q):
 
     elif fun == 400:
         src, dst = task[1], task[2]
+        if src not in st_ed_dict:
+            st_ed_dict[src] = [None, None, 0]
+        if dst not in st_ed_dict:
+            st_ed_dict[dst] = [None, None, 0]
         move_len = math.floor(st_ed_dict[src][2]/2)
         if not move_len:
             pass
