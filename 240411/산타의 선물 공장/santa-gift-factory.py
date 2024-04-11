@@ -14,11 +14,14 @@ for _ in range(Q):
     if task[0] == 100:
         # 공장 설립
         n, m = task[1], task[2]
+        bn_lst = []
+        for bn in range(n):
+            bn_lst.append(Node(bn))
         b_cnt = n//m
         id_lst = task[3: n+3]
         w_lst = task[n+3:]
         belt_num = 0
-        belt_node = Node(belt_num)
+        belt_node = Node(bn_lst[belt_num])
         new_node = None
         s_node, e_node = None, None
         for idx in range(n):
@@ -35,7 +38,7 @@ for _ in range(Q):
                 s_node = new_node
                 new_node.prev = None
                 belt_num += 1
-                belt_node = Node(belt_num)
+                belt_node = Node(bn_lst[belt_num])
             id_dict[id_lst[idx]] = (belt_node, new_node)
         new_node.next = None
         belt_lst.append((s_node, new_node))
@@ -81,7 +84,7 @@ for _ in range(Q):
         f_id = task[1]
         if f_id in id_dict:
             belt_num, f_box = id_dict.get(f_id)
-            belt_num = belt_num.data
+            belt_num = belt_num.data.data
             front_box, last_box = belt_lst[belt_num]
             if front_box == f_box:
                 pass
@@ -118,9 +121,9 @@ for _ in range(Q):
                 break
         last_box = belt_lst[move_num][1]
         first_box = belt_lst[b_num][0]
-        tmp_tuple1 = id_dict.get(first_box.data[0])
-        tmp_tuple2 = id_dict.get(last_box.data[0])
-        id_dict[first_box.data[0]] = (tmp_tuple2[0], tmp_tuple1[1])
+        new_belt_node = Node(id_dict.get(last_box.data[0])[0].data.data)
+        id_dict.get(first_box.data[0])[0].data = new_belt_node
+        id_dict.get(last_box.data[0])[0].data = new_belt_node
         first_box.prev = last_box
         last_box.next = first_box
         print(task[1])
