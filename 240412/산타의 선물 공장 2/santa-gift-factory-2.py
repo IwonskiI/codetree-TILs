@@ -1,4 +1,5 @@
 import math
+# import sys
 
 
 class Node:
@@ -8,12 +9,14 @@ class Node:
         self.next = None
 
 
+# sys.stdin = open("input.txt", "r")
 Q = int(input())
 
 box_dict = dict()
 belt_dict = dict()
+cnt = 1
 
-for _ in range(Q):
+for q in range(Q):
     task = list(map(int, input().split()))
 
     if task[0] == 100:
@@ -98,6 +101,8 @@ for _ in range(Q):
             for _ in range(1, move_len):
                 s_cur = s_cur.next
             s_nxt = s_cur.next
+            if s_nxt:
+                s_nxt.prev = None
             if d_len:
                 d_fst.prev = s_cur
                 s_cur.next = d_fst
@@ -125,3 +130,4 @@ for _ in range(Q):
         b = c_lst.data if c_lst else -1
         c = c_len
         print(a + 2*b + 3*c)
+    cnt += 1
