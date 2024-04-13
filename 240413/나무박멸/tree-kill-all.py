@@ -137,7 +137,7 @@ for _ in range(M):
         for r in range(N):
             if board[c][r] > 0:
                 cut_cnt = chk_spray(c, r)
-                if cut_cnt >= max_cut[0]:
+                if cut_cnt > max_cut[0]:
                     max_cut = [cut_cnt, c, r]
 
     spray_tree(max_cut[1], max_cut[2])
