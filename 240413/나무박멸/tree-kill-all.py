@@ -94,13 +94,13 @@ for c in range(N):
     for r in range(N):
         if board[c][r] > 0:
             add_tree(c, r)
-            left_tree = True
+            # left_tree = True
 
 # m years spent
 for _ in range(M):
     # 최대 박멸 수, col 좌표, row 좌표
     max_cut = [0, 99, 99]
-    left_tree = False
+    # left_tree = False
     
     for c in range(N):
         for r in range(N):
@@ -112,11 +112,11 @@ for _ in range(M):
                         if 0 > nc or 0 > nr or nc >= N or nr >= N or board[nc][nr] != 0 or s_left[nc][nr] != 0:
                             continue
                         wall[nc][nr] -= 1
-            if board[c][r] > 0:
-                left_tree = True
+            # if board[c][r] > 0:
+            #     left_tree = True
 
-    if not left_tree:
-        break
+    # if not left_tree:
+    #     break
 
     add_lst = [[0 for _ in range(N)] for _ in range(N)]
 
