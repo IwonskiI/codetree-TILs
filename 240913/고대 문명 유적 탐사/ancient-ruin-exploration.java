@@ -109,8 +109,8 @@ public class Main {
 				}
 			}
 			for(int td = 0; td < 3; td++) {
-				for(int r = 1; r < 4; r++) {
-					for(int c = 1; c < 4; c++) {
+				for(int c = 1; c < 4; c++) {
+					for(int r = 1; r < 4; r++) {
 						int[][] t_board = turn(r, c, td);
 						for(int rr = 0; rr < 3; rr++) {
 							for(int cc = 0; cc < 3; cc++) {
