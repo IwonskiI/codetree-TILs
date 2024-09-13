@@ -162,7 +162,9 @@ public class Main {
 					board[r][c] = wall[wall_idx++];
 				}
 				
-				max_score += calc();
+				int add_score = calc();
+				if(add_score == 0) break;
+				max_score += add_score;
 				fill = stack;
 				fill_idx = stack_idx;
 				
