@@ -12,21 +12,42 @@ public class Main {
     // td : 0 - 90도 / 1 - 180도 / 2 - 270도
     public static int[][] turn(int r, int c, int td) {
         int[][] t_board = new int[3][3];
-        for(int rr = 0; rr < 3; rr++) {
-            for(int cc = 0; cc < 3; cc++) {
-                switch(td) {
-                case 0:
-                    t_board[rr][cc] = board[2-cc+(r-1)][rr+(c-1)];
-                    break;
-                case 1:
-                    t_board[rr][cc] = board[2-cc+(r-1)][2-rr+(c-1)];
-                    break;
-                case 2:
-                    t_board[rr][cc] = board[cc+(r-1)][2-rr+(c-1)];
-                    break;
-                }
-            }
+        t_board[0][0] = board[r-1][c-1];
+    	t_board[0][1] = board[r-1][c];
+    	t_board[0][2] = board[r-1][c+1];
+    	t_board[1][0] = board[r][c-1];
+    	t_board[1][1] = board[r][c];
+    	t_board[1][2] = board[r][c+1];
+    	t_board[2][0] = board[r+1][c-1];
+    	t_board[2][1] = board[r+1][c];
+    	t_board[2][2] = board[r+1][c+1];
+        for(int tdd = 0; tdd <= td; tdd++) {
+            int tmp = t_board[0][2];
+            t_board[0][2] = t_board[0][0];
+            t_board[0][0] = t_board[2][0];
+            t_board[2][0] = t_board[2][2];
+            t_board[2][2] = tmp;
+            tmp = t_board[1][2];
+            t_board[1][2] = t_board[0][1];
+            t_board[0][1] = t_board[1][0];
+            t_board[1][0] = t_board[2][1];
+            t_board[2][1] = tmp;
         }
+//        for(int rr = 0; rr < 3; rr++) {
+//            for(int cc = 0; cc < 3; cc++) {
+//                switch(td) {
+//                case 0:
+//                    t_board[rr][cc] = board[2-cc+(r-1)][rr+(c-1)];
+//                    break;
+//                case 1:
+//                    t_board[rr][cc] = board[2-cc+(r-1)][2-rr+(c-1)];
+//                    break;
+//                case 2:
+//                    t_board[rr][cc] = board[cc+(r-1)][2-rr+(c-1)];
+//                    break;
+//                }
+//            }
+//        }
         
         return t_board;
     }
