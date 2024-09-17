@@ -83,9 +83,12 @@ public class Main {
         while(!p_lst.isEmpty()) {
             int[] cur = p_lst.peek();
             // 상품이 취소되었거나 수익이 음수면 큐에서 제거
-            if(!is_sell[cur[0]] || cur[3] < 0) {
+            if(!is_sell[cur[0]]) {
                 p_lst.poll(); // 제거
-            } else {
+            }else if(cur[3] < 0) {
+            	break;
+            }
+            else {
                 ans = cur[0];
                 p_lst.poll(); // 판매된 상품 제거
                 break;
