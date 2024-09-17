@@ -7,7 +7,6 @@ public class Main {
 	public static StringBuilder sb = new StringBuilder();
 	public static StringTokenizer st;
 	public static int N, M;
-	public static List<List<int[]>> lst = new ArrayList<>();
 	public static int[][] path;
 	public static int[] cost;
 	public static boolean[] is_sell = new boolean[30010];
@@ -29,13 +28,13 @@ public class Main {
 			int[] cur = pq.poll();
 			int cv = cur[0], dist = cur[1];
 			if(cost[cv] < dist) continue;
-			for(int i = 0; i < lst.get(cv).size(); i++) {
-				int next = lst.get(cv).get(i)[0];
-				int nextDist = dist + lst.get(cv).get(i)[1];
+			for(int i = 0; i < N; i++) {
+				if(path[cv][i] == 200) continue;
+				int nextDist = dist + path[cv][i];
 				
-				if(nextDist < cost[next]) {
-					cost[next] = nextDist;
-					pq.offer(new int[] {next, nextDist});
+				if(nextDist < cost[i]) {
+					cost[i] = nextDist;
+					pq.offer(new int[] {i, nextDist});
 				}
 			}
 		}
@@ -48,7 +47,8 @@ public class Main {
 		cost = new int[N];
 		Arrays.fill(cost, 200);
 		for(int i = 0; i < N; i++) {
-			lst.add(new ArrayList<>());
+			Arrays.fill(path[i], 200);
+			path[i][i] = 0;
 		}
 		
 		for(int i = 0; i < M; i++) {
@@ -56,8 +56,8 @@ public class Main {
 			int u = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
 			if(v == u) continue;
-			lst.get(v).add(new int[] {u, w});
-			lst.get(u).add(new int[] {v, w});
+			path[u][v] = Math.min(path[u][v], w);
+			path[v][u] = Math.min(path[v][u], w);
 		}
 		
 		dijkstra(0);
