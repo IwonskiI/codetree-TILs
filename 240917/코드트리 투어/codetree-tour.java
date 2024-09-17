@@ -79,15 +79,18 @@ public class Main {
 	
 	public static void sell() {
 		int ans = -1;
-		while(!p_lst.isEmpty()) {
-			int[] cur = p_lst.peek();
-			if(cur[3] < 0) break;
-			cur = p_lst.poll();
-			if(is_sell[cur[0]]) {
-				ans = cur[0];
-				break;
-			}
-		}
+        // 큐에서 취소되거나 수익이 음수인 상품을 제거
+        while(!p_lst.isEmpty()) {
+            int[] cur = p_lst.peek();
+            // 상품이 취소되었거나 수익이 음수면 큐에서 제거
+            if(!is_sell[cur[0]] || cur[3] < 0) {
+                p_lst.poll(); // 제거
+            } else {
+                ans = cur[0];
+                p_lst.poll(); // 판매된 상품 제거
+                break;
+            }
+        }
 		sb.append(ans).append("\n");
 //		while(!p_lst.isEmpty() && !is_sell[p_lst.peek()[0]]) {
 //			p_lst.poll();
