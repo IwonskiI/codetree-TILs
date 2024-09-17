@@ -7,12 +7,14 @@ public class Main {
 	public static StringBuilder sb = new StringBuilder();
 	public static StringTokenizer st;
 	public static int N, M;
+	public static List<List<int[]>> lst = new ArrayList<>();
 	public static int[][] path;
 	public static int[] cost;
-	public static boolean[] is_sell = new boolean[30010], is_cancel = new boolean[30010];
+	public static boolean[] is_sell = new boolean[30010];
 	public static PriorityQueue<int[]> p_lst = new PriorityQueue<>((a, b) -> {
-		if(a[3] == b[3]) return a[0] - b[0];
-		return b[3] - a[3];
+		int ca = a[1] - a[3], cb = b[1] - b[3];
+		if(ca == cb) return a[0] - b[0];
+		return cb - ca;
 	});
 	
 	public static void dijkstra(int sv) {
@@ -27,13 +29,13 @@ public class Main {
 			int[] cur = pq.poll();
 			int cv = cur[0], dist = cur[1];
 			if(cost[cv] < dist) continue;
-			for(int i = 0; i < N; i++) {
-				if(path[cv][i] == 0x7fffffff) continue;
-				int nextcostist = dist + path[cv][i];
+			for(int i = 0; i < lst.get(cv).size(); i++) {
+				int next = lst.get(cv).get(i)[0];
+				int nextDist = dist + lst.get(cv).get(i)[1];
 				
-				if(nextcostist < cost[i]) {
-					cost[i] = nextcostist;
-					pq.offer(new int[] {i, nextcostist});
+				if(nextDist < cost[next]) {
+					cost[next] = nextDist;
+					pq.offer(new int[] {next, nextDist});
 				}
 			}
 		}
@@ -44,19 +46,17 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		path = new int[N][N];
 		cost = new int[N];
-		Arrays.fill(cost, 0x7fffffff);
+		Arrays.fill(cost, 0x3f3f3f3f);
 		for(int i = 0; i < N; i++) {
-			Arrays.fill(path[i], 0x7fffffff);
-			path[i][i] = 0;
+			lst.add(new ArrayList<>());
 		}
 		
 		for(int i = 0; i < M; i++) {
 			int v = Integer.parseInt(st.nextToken());
 			int u = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
-			if(v == u) continue;
-			path[u][v] = Math.min(path[u][v], w);
-			path[v][u] = Math.min(path[v][u], w);
+			lst.get(v).add(new int[] {u, w});
+			lst.get(u).add(new int[] {v, w});
 		}
 		
 		dijkstra(0);
@@ -66,58 +66,47 @@ public class Main {
 		int id = Integer.parseInt(st.nextToken());
 		int rv = Integer.parseInt(st.nextToken());
 		int d_id = Integer.parseInt(st.nextToken());
-		int profit = rv-cost[d_id] < 0 ? -1 : rv - cost[d_id];
+		int dist = cost[d_id];
 		
-		p_lst.offer(new int[] {id, rv, d_id, profit});
+		p_lst.offer(new int[] {id, rv, d_id, dist});
 		is_sell[id] = true;
 	}
 	
 	public static void cancel() {
 		int id = Integer.parseInt(st.nextToken());
-		if(is_sell[id]) is_cancel[id] = true;
+		is_sell[id] = false;
 	}
 	
-	public static int sell() {
-        // 큐에서 취소되거나 수익이 음수인 상품을 제거
-        while(!p_lst.isEmpty()) {
-            int[] cur = p_lst.peek();
-             if(cur[3] < 0) {
-            	break;
-            }
-            p_lst.poll();
-            if(!is_cancel[cur[0]]) {
-                return cur[0];
-            }
-        }
-		return -1;
-//		while(!p_lst.isEmpty() && !is_sell[p_lst.peek()[0]]) {
-//			p_lst.poll();
-//		}
-//		if(p_lst.isEmpty()) sb.append("-1\n");
-//		else {
-//			int[] cur = p_lst.peek();
-//			if(cur[3] < 0) sb.append("-1\n");
-//			else {
-//				cur = p_lst.poll();
-//				sb.append(cur[0]).append("\n");
-//			}
-//		}
+	public static void sell() {
+		while(!p_lst.isEmpty() && !is_sell[p_lst.peek()[0]]) {
+			p_lst.poll();
+		}
+		if(p_lst.isEmpty()) sb.append("-1\n");
+		else {
+			int[] cur = p_lst.peek();
+			if(cur[1] - cur[3] < 0) sb.append("-1\n");
+			else {
+				cur = p_lst.poll();
+				sb.append(cur[0]).append("\n");
+			}
+		}
 	}
 	
 	public static void change() {
 		cost = new int[N];
-		Arrays.fill(cost, 0x7fffffff);
+		Arrays.fill(cost, 0x3f3f3f3f);
 		dijkstra(Integer.parseInt(st.nextToken()));
 		
 		PriorityQueue<int[]> temp_pq = new PriorityQueue<>((a, b) -> {
-			if(a[3] == b[3]) return a[0] - b[0];
-			return b[3] - a[3];
+			int ca = a[1] - a[3], cb = b[1] - b[3];
+			if(ca == cb) return a[0] - b[0];
+			return cb - ca;
 		});
 		
 		while(!p_lst.isEmpty()) {
 			int[] cur = p_lst.poll();
-			int profit = cur[1]-cost[cur[2]] < 0 ? -1 : cur[1] - cost[cur[2]];
-			temp_pq.offer(new int[] {cur[0], cur[1], cur[2], profit});
+			int dist = cost[cur[2]];
+			temp_pq.offer(new int[] {cur[0], cur[1], cur[2], dist});
 		}
 		
 		p_lst = temp_pq;
@@ -145,7 +134,7 @@ public class Main {
         		cancel();
         		break;
         	case 400:
-        		sb.append(sell()).append("\n");
+        		sell();
         		break;
         	case 500:
         		change();
