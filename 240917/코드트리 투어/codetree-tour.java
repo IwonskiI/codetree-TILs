@@ -78,18 +78,29 @@ public class Main {
 	}
 	
 	public static void sell() {
-		while(!p_lst.isEmpty() && !is_sell[p_lst.peek()[0]]) {
-			p_lst.poll();
-		}
-		if(p_lst.isEmpty()) sb.append("-1\n");
-		else {
+		int ans = -1;
+		while(!p_lst.isEmpty()) {
 			int[] cur = p_lst.peek();
-			if(cur[3] < 0) sb.append("-1\n");
-			else {
-				cur = p_lst.poll();
-				sb.append(cur[0]).append("\n");
+			if(cur[3] < 0) break;
+			cur = p_lst.poll();
+			if(is_sell[cur[0]]) {
+				ans = cur[0];
+				break;
 			}
 		}
+		sb.append(ans).append("\n");
+//		while(!p_lst.isEmpty() && !is_sell[p_lst.peek()[0]]) {
+//			p_lst.poll();
+//		}
+//		if(p_lst.isEmpty()) sb.append("-1\n");
+//		else {
+//			int[] cur = p_lst.peek();
+//			if(cur[3] < 0) sb.append("-1\n");
+//			else {
+//				cur = p_lst.poll();
+//				sb.append(cur[0]).append("\n");
+//			}
+//		}
 	}
 	
 	public static void change() {
