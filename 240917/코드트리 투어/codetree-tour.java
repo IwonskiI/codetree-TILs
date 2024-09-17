@@ -11,9 +11,8 @@ public class Main {
 	public static int[] cost;
 	public static boolean[] is_sell = new boolean[30010];
 	public static PriorityQueue<int[]> p_lst = new PriorityQueue<>((a, b) -> {
-		int ca = a[1] - a[3], cb = b[1] - b[3];
-		if(ca == cb) return a[0] - b[0];
-		return cb - ca;
+		if(a[3] == b[3]) return a[0] - b[0];
+		return b[3] - a[3];
 	});
 	
 	public static void dijkstra(int sv) {
@@ -67,9 +66,9 @@ public class Main {
 		int id = Integer.parseInt(st.nextToken());
 		int rv = Integer.parseInt(st.nextToken());
 		int d_id = Integer.parseInt(st.nextToken());
-		int dist = cost[d_id];
+		int profit = rv-cost[d_id] < 0 ? -1 : rv - cost[d_id];
 		
-		p_lst.offer(new int[] {id, rv, d_id, dist});
+		p_lst.offer(new int[] {id, rv, d_id, profit});
 		is_sell[id] = true;
 	}
 	
@@ -85,7 +84,7 @@ public class Main {
 		if(p_lst.isEmpty()) sb.append("-1\n");
 		else {
 			int[] cur = p_lst.peek();
-			if(cur[1] - cur[3] < 0) sb.append("-1\n");
+			if(cur[3] < 0) sb.append("-1\n");
 			else {
 				cur = p_lst.poll();
 				sb.append(cur[0]).append("\n");
@@ -99,15 +98,14 @@ public class Main {
 		dijkstra(Integer.parseInt(st.nextToken()));
 		
 		PriorityQueue<int[]> temp_pq = new PriorityQueue<>((a, b) -> {
-			int ca = a[1] - a[3], cb = b[1] - b[3];
-			if(ca == cb) return a[0] - b[0];
-			return cb - ca;
+			if(a[3] == b[3]) return a[0] - b[0];
+			return b[3] - a[3];
 		});
 		
 		while(!p_lst.isEmpty()) {
 			int[] cur = p_lst.poll();
-			int dist = cost[cur[2]];
-			temp_pq.offer(new int[] {cur[0], cur[1], cur[2], dist});
+			int profit = cur[1]-cost[cur[2]] < 0 ? -1 : cur[1] - cost[cur[2]];
+			temp_pq.offer(new int[] {cur[0], cur[1], cur[2], profit});
 		}
 		
 		p_lst = temp_pq;
