@@ -74,11 +74,10 @@ public class Main {
 	
 	public static void cancel() {
 		int id = Integer.parseInt(st.nextToken());
-		if(is_sell[id]) is_cancel[id] = false;
+		if(is_sell[id]) is_cancel[id] = true;
 	}
 	
-	public static void sell() {
-		int ans = -1;
+	public static int sell() {
         // 큐에서 취소되거나 수익이 음수인 상품을 제거
         while(!p_lst.isEmpty()) {
             int[] cur = p_lst.peek();
@@ -87,11 +86,10 @@ public class Main {
             }
             p_lst.poll();
             if(!is_cancel[cur[0]]) {
-                ans = cur[0];
-                break;
+                return cur[0];
             }
         }
-		sb.append(ans).append("\n");
+		return -1;
 //		while(!p_lst.isEmpty() && !is_sell[p_lst.peek()[0]]) {
 //			p_lst.poll();
 //		}
@@ -147,7 +145,7 @@ public class Main {
         		cancel();
         		break;
         	case 400:
-        		sell();
+        		sb.append(sell()).append("\n");
         		break;
         	case 500:
         		change();
