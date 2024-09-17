@@ -55,6 +55,7 @@ public class Main {
 			int v = Integer.parseInt(st.nextToken());
 			int u = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
+			if(v == u) continue;
 			lst.get(v).add(new int[] {u, w});
 			lst.get(u).add(new int[] {v, w});
 		}
