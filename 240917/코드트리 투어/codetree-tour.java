@@ -9,57 +9,35 @@ public class Main {
 	public static int N, M;
 	public static int[][] path;
 	public static int[] cost;
-	public static boolean[] is_sell = new boolean[30010];
+	public static boolean[] is_sell = new boolean[30010], is_cancel = new boolean[30010];
 	public static PriorityQueue<int[]> p_lst = new PriorityQueue<>((a, b) -> {
 		if(a[3] == b[3]) return a[0] - b[0];
 		return b[3] - a[3];
 	});
 	
-//	public static void dijkstra(int sv) {
-//		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) ->{
-//			if(a[1] == b[1]) return a[0] - b[0];
-//			return a[1] - b[1];
-//		});
-//		pq.offer(new int[] {sv, 0});
-//		cost[sv] = 0;
-//		
-//		while(!pq.isEmpty()) {
-//			int[] cur = pq.poll();
-//			int cv = cur[0], dist = cur[1];
-//			if(cost[cv] < dist) continue;
-//			for(int i = 0; i < N; i++) {
-//				if(path[cv][i] == 200) continue;
-//				int nextcostist = dist + path[cv][i];
-//				
-//				if(nextcostist < cost[i]) {
-//					cost[i] = nextcostist;
-//					pq.offer(new int[] {i, nextcostist});
-//				}
-//			}
-//		}
-//	}
-	
-    public static void dijkstra(int sv) {
-        boolean[] visit = new boolean[N];
-        Arrays.fill(cost, 200);
-        cost[sv] = 0;
-
-        for (int i = 0; i < N - 1; i++) {
-            int v = 0, mincostist = 200;
-            for (int j = 0; j < N; j++) {
-                if (!visit[j] && mincostist > cost[j]) {
-                    v = j;
-                    mincostist = cost[j];
-                }
-            }
-            visit[v] = true;
-            for (int j = 0; j < N; j++) {
-                if (!visit[j] && cost[v] != 200 && path[v][j] != 200 && cost[j] > cost[v] + path[v][j]) {
-                    cost[j] = cost[v] + path[v][j];
-                }
-            }
-        }
-    }
+	public static void dijkstra(int sv) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) ->{
+			if(a[1] == b[1]) return a[0] - b[0];
+			return a[1] - b[1];
+		});
+		pq.offer(new int[] {sv, 0});
+		cost[sv] = 0;
+		
+		while(!pq.isEmpty()) {
+			int[] cur = pq.poll();
+			int cv = cur[0], dist = cur[1];
+			if(cost[cv] < dist) continue;
+			for(int i = 0; i < N; i++) {
+				if(path[cv][i] == 200) continue;
+				int nextcostist = dist + path[cv][i];
+				
+				if(nextcostist < cost[i]) {
+					cost[i] = nextcostist;
+					pq.offer(new int[] {i, nextcostist});
+				}
+			}
+		}
+	}
 	
 	public static void init() {
 		N = Integer.parseInt(st.nextToken());
@@ -96,7 +74,7 @@ public class Main {
 	
 	public static void cancel() {
 		int id = Integer.parseInt(st.nextToken());
-		is_sell[id] = false;
+		if(is_sell[id]) is_cancel[id] = false;
 	}
 	
 	public static void sell() {
@@ -104,15 +82,12 @@ public class Main {
         // 큐에서 취소되거나 수익이 음수인 상품을 제거
         while(!p_lst.isEmpty()) {
             int[] cur = p_lst.peek();
-            // 상품이 취소되었거나 수익이 음수면 큐에서 제거
-            if(!is_sell[cur[0]]) {
-                p_lst.poll(); // 제거
-            }else if(cur[3] < 0) {
+             if(cur[3] < 0) {
             	break;
             }
-            else {
+            p_lst.poll();
+            if(!is_cancel[cur[0]]) {
                 ans = cur[0];
-                p_lst.poll(); // 판매된 상품 제거
                 break;
             }
         }
