@@ -28,7 +28,7 @@ public class Main {
 			int cv = cur[0], dist = cur[1];
 			if(cost[cv] < dist) continue;
 			for(int i = 0; i < N; i++) {
-				if(path[cv][i] == 200) continue;
+				if(path[cv][i] == 0x7fffffff) continue;
 				int nextcostist = dist + path[cv][i];
 				
 				if(nextcostist < cost[i]) {
@@ -44,9 +44,9 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		path = new int[N][N];
 		cost = new int[N];
-		Arrays.fill(cost, 200);
+		Arrays.fill(cost, 0x7fffffff);
 		for(int i = 0; i < N; i++) {
-			Arrays.fill(path[i], 200);
+			Arrays.fill(path[i], 0x7fffffff);
 			path[i][i] = 0;
 		}
 		
@@ -106,7 +106,7 @@ public class Main {
 	
 	public static void change() {
 		cost = new int[N];
-		Arrays.fill(cost, 200);
+		Arrays.fill(cost, 0x7fffffff);
 		dijkstra(Integer.parseInt(st.nextToken()));
 		
 		PriorityQueue<int[]> temp_pq = new PriorityQueue<>((a, b) -> {
