@@ -29,9 +29,9 @@ public class Main {
         	if(sum > 0) ep--;
         	else if(sum < 0) sp++;
 
+        	min = Math.min(Math.abs(sum), min);
             if(sp == ep) break;
         	
-        	min = Math.min(Math.abs(sum), min);
         }
         
         
